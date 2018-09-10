@@ -1,0 +1,72 @@
+version: '2.1'
+
+services:
+
+  rabbit:
+    container_name: rabbitmq
+    hostname: rabbit
+    image: rabbitmq:latest
+    environment:
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+        - "5672:5672"
+
+  james-service:
+    container_name: james-service
+    build:
+      context: ../../${JAMES_SERVICE_DIR}
+    volumes:
+      - '../../${JAMES_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5001:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@james-db:5432/james_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@james-db:5432/james_test
+      - SECRET_KEY=my_precious1
+
+  nina-service:
+    container_name: nina-service
+    build:
+      context: ../../${NINA_SERVICE_DIR}
+    volumes:
+      - '../../${NINA_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5002:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@nina-db:5432/nina_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@nina-db:5432/nina_test
+      - SECRET_KEY=my_precious1
+
+  james-db:
+    container_name: james-db
+    build:
+      context: ../../${JAMES_SERVICE_DIR}/app/db
+    ports:
+      - 5465:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  nina-db:
+    container_name: nina-db
+    build:
+      context: ../../${NINA_SERVICE_DIR}/app/db
+    ports:
+      - 5455:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  nginx-service:
+    container_name: nginx-service
+    build: ../nginx/
+    restart: always
+    ports:
+      - 80:80

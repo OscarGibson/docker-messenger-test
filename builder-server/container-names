@@ -1,0 +1,8 @@
+users-service:users-service
+projects-service:projects-service
+sections-service:sections-service
+ideas-service:squibler-be-ideas
+sub-sections-service:sub-sections-service
+web-service:squibler-fe
+swagger-service:swagger-service
+upload-service:upload-service

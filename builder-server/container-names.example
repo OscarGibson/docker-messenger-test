@@ -1,0 +1,12 @@
+# Put here names of containers directories names
+# For exmaple if your dir with `users-service` called `Squibler-be`, then
+# users-service:Squibler-be
+# ! without spaces
+
+users_service:<dir_name>
+projects_service:<dir_name>
+sections_service:<dir_name>
+ideas_service:<dir_name>
+sub_sections_service:<dir_name>
+web_service:<dir_name>
+swagger_service:<dir_name>

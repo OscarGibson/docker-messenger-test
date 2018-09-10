@@ -1,0 +1,185 @@
+version: '2.1'
+
+services:
+
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:latest
+    environment:
+        - RABBITMQ_DEFAULT_USER=admin
+        - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+        - "5672:5672"
+
+  users-service:
+    container_name: users-service
+    build:
+      context: ../${USERS_SERVICE_DIR}
+      dockerfile: Dockerfile-local
+    volumes:
+      - '../${USERS_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5001:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - SECRET_KEY=my_precious1
+
+  projects-service:
+    container_name: projects-service
+    build:
+      context: ../${PROJECTS_SERVICE_DIR}
+    volumes:
+      - '../${PROJECTS_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5002:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@projects-db:5432/projects_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@projects-db:5432/projects_test
+      - SECRET_KEY=my_precious1
+
+  ideas-service:
+    container_name: ideas-service
+    build:
+      context: ../${IDEAS_CONTAINER_DIR}
+    volumes:
+      - '../${IDEAS_CONTAINER_DIR}:/usr/src/app'
+    ports:
+      - 5005:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@ideas-db:5432/ideas_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@ideas-db:5432/ideas_test
+      - SECRET_KEY=my_precious1
+
+  upload-service:
+    container_name: upload-service
+    build:
+      context: ../${UPLOAD_SERVICE_DIR}
+      dockerfile: Dockerfile-local
+    volumes:
+      - '../${UPLOAD_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5006:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - SECRET_KEY=my_precious1
+
+  sub-sections-service:
+    container_name: sub-sections-service
+    build:
+      context: ../${SUB_SECTIONS_SERVICE_DIR}
+    volumes:
+      - '../${SUB_SECTIONS_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5004:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@sub-sections-db:5432/sub_sections_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@sub-sections-db:5432/sub_sections_test
+      - SECRET_KEY=my_precious1
+
+  web-service:
+    container_name: web-service
+    build:
+      context: ../${WEB_SERVICE_DIR}
+    volumes:
+      - '../${WEB_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 9000:9000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@sub-sections-db:5432/sub_sections_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@sub-sections-db:5432/sub_sections_test
+      - SECRET_KEY=my_precious1
+
+  sections-service:
+    container_name: sections-service
+    build:
+      context: ../${SECTIONS_SERVICE_DIR}
+    volumes:
+      - '../${SECTIONS_SERVICE_DIR}:/usr/src/app'
+    ports:
+      - 5003:5000
+    environment:
+      - APP_SETTINGS=project.config.DevelopmentConfig
+      - DATABASE_URL=postgres://postgres:postgres@sections-db:5432/sections_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@sections-db:5432/sections_test
+      - SECRET_KEY=my_precious1
+
+  nginx-service:
+    container_name: nginx-service
+    build: ./nginx/
+    restart: always
+    ports:
+      - 80:80
+
+  swagger-service:
+    container_name: ${SWAGGER_SERVICE_DIR}
+    build:
+      context: ../${SWAGGER_SERVICE_DIR}
+    ports:
+      - '8081:8081'
+
+  users-db:
+    container_name: users-db
+    build:
+      context: ../${USERS_SERVICE_DIR}/app/db
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  projects-db:
+    container_name: projects-db
+    build:
+      context: ../${PROJECTS_SERVICE_DIR}/app/db
+    ports:
+      - 5445:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  ideas-db:
+    container_name: ideas-db
+    build:
+      context: ../${IDEAS_CONTAINER_DIR}/app/db
+    ports:
+      - 5475:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  sub-sections-db:
+    container_name: sub-sections-db
+    build:
+      context: ../${SUB_SECTIONS_SERVICE_DIR}/app/db
+    ports:
+      - 5465:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
+  sections-db:
+    container_name: sections-db
+    build:
+      context: ../${SECTIONS_SERVICE_DIR}/app/db
+    ports:
+      - 5455:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+
