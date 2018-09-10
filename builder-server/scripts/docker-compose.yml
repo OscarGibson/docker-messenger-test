@@ -10,7 +10,7 @@ services:
         - RABBITMQ_DEFAULT_USER=admin
         - RABBITMQ_DEFAULT_PASS=mypass
     ports:
-        - "5672:5672"
+        - 5672:5672
 
   james-service:
     container_name: james-service
@@ -19,7 +19,7 @@ services:
     volumes:
       - '../../${JAMES_SERVICE_DIR}:/usr/src/app'
     ports:
-      - 5001:5000
+      - 5010:5000
     environment:
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgres://postgres:postgres@james-db:5432/james_dev
@@ -33,7 +33,7 @@ services:
     volumes:
       - '../../${NINA_SERVICE_DIR}:/usr/src/app'
     ports:
-      - 5002:5000
+      - 5011:5000
     environment:
       - APP_SETTINGS=project.config.DevelopmentConfig
       - DATABASE_URL=postgres://postgres:postgres@nina-db:5432/nina_dev
@@ -45,7 +45,7 @@ services:
     build:
       context: ../../${JAMES_SERVICE_DIR}/app/db
     ports:
-      - 5465:5432
+      - 5502:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -57,16 +57,16 @@ services:
     build:
       context: ../../${NINA_SERVICE_DIR}/app/db
     ports:
-      - 5455:5432
+      - 5503:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     healthcheck:
       test: exit 0
 
-  nginx-service:
-    container_name: nginx-service
+  nginx-2-service:
+    container_name: nginx-2-service
     build: ../nginx/
     restart: always
     ports:
-      - 80:80
+      - 81:80

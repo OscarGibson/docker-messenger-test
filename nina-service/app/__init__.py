@@ -11,6 +11,7 @@ from flask_mail import Mail
 from flask_marshmallow import Marshmallow
 
 from helpers.functions.url_rules import UrlRules
+from app.message_broker import MessageBroker
 
 import importlib
 
@@ -22,6 +23,11 @@ bcrypt = Bcrypt()
 mail = Mail()
 url_rules = UrlRules()
 marsh_mallow = Marshmallow()
+message_broker = MessageBroker(
+    rabbit_mq_path= 'amqp://admin:mypass@rabbitmq:5672/%2f',
+    current_queue_name= 'nina',
+    )
+
 
 
 def create_app(env= 'development'):
@@ -49,6 +55,7 @@ def create_app(env= 'development'):
     mail.init_app(app)
     url_rules.init_app(app)
     marsh_mallow.init_app(app)
+    message_broker.init_app(app)
 
     # init urls
     from app.api.v1.auth import urls as auth_urls

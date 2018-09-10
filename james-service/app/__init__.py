@@ -12,6 +12,8 @@ from helpers.functions.url_rules import UrlRules
 from helpers.functions import get_config_by_env
 
 import importlib
+# from threading import Thread
+from app.message_broker import MessageBroker
 
 
 # instantiate the extensions
@@ -19,6 +21,10 @@ db = SQLAlchemy()
 migrate = Migrate()
 url_rules = UrlRules()
 marsh_mallow = Marshmallow()
+message_broker = MessageBroker(
+    rabbit_mq_path= 'amqp://admin:mypass@rabbitmq:5672/%2f',
+    current_queue_name= 'james',
+    )
 
 
 def create_app(env= 'development'):
@@ -36,6 +42,7 @@ def create_app(env= 'development'):
     migrate.init_app(app, db)
     url_rules.init_app(app)
     marsh_mallow.init_app(app)
+    message_broker.init_app(app)
 
     # init urls
     from app.api.v1.projects import urls
