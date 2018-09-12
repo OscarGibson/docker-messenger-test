@@ -1,3 +1,8 @@
+import logging
+
+logging.basicConfig(level= logging.DEBUG)
+
+
 class Storage:
 
     _storage = {}
@@ -7,9 +12,10 @@ class Storage:
     @classmethod
     def have_message(cls, uuid):
         try:
-            _ = cls._storage[uui]
+            _ = cls._storage[uuid]
             return True
         except Exception as e:
+            # logging.info("ERROR ON GETTING FROM STORAGE" % str(e))
             return False
 
     @classmethod
@@ -18,6 +24,7 @@ class Storage:
 
     @classmethod
     def add_message(cls, uuid, message):
+        logging.info("ADD MESSAGE TO STORAGE")
         cls._storage[uuid] = message
 
     @classmethod

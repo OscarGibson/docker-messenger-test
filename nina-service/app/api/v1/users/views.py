@@ -16,13 +16,15 @@ class UserAPI(MethodView):
         answer = message_broker.send_and_wait(
             receiver_name= "james",
             question= {
-                'function': 'mult_numbers',
+                'method_name': 'mult_numbers',
                 'kwargs' : {
                     'x' : 1,
                     'y' : 2,
                 }
             }
             )
-        return str(answer)
+
+        return str(message_broker.storage._storage)
+        # return str(answer)
 
         # return User.query.all().count()

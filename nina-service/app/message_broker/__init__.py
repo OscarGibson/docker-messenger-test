@@ -9,12 +9,12 @@ class MessageBroker:
         self.current_queue_name = current_queue_name
         self.storage = storage.Storage()
         self.producer = producer.Producer(self.rabbit_mq_path, self.current_queue_name)
-        self.manager = manager.Manager
+        self.manager = manager.Manager()
         self.receiver = receiver.Receiver(
-            self.rabbit_mq_path, 
-            self.current_queue_name, 
-            self.storage, 
-            self.producer, 
+            self.rabbit_mq_path,
+            self.current_queue_name,
+            self.storage,
+            self.producer,
             self.manager
             )
 
@@ -44,4 +44,3 @@ class MessageBroker:
                 return response
             if time() - start_time > self.timeout:
                 return "Timeout error"
-

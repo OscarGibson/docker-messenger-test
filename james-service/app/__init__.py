@@ -26,7 +26,6 @@ message_broker = MessageBroker(
     current_queue_name= 'james',
     )
 
-
 def create_app(env= 'development'):
 
     # instantiate the app
@@ -42,6 +41,8 @@ def create_app(env= 'development'):
     migrate.init_app(app, db)
     url_rules.init_app(app)
     marsh_mallow.init_app(app)
+
+    from app.api.v1.projects.managers import JamesManager
     message_broker.init_app(app)
 
     # init urls

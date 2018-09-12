@@ -10,3 +10,5 @@ SubSectionsMessenger = Messenger('http://sub-sections-service:5000/api/v1/projec
 IdeasMessenger = Messenger('http://ideas-service:5000/api/v1/ideas%s')
 
 # SectionsMessenger = Messenger('http://localhost:5003/api/v1/projects/sections')
+
+from .managers import *

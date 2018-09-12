@@ -7,19 +7,21 @@ class MessageBroker:
         self.timeout = timeout
         self.rabbit_mq_path = rabbit_mq_path
         self.current_queue_name = current_queue_name
+
+
+    def init_app(self, app):
+
         self.storage = storage.Storage()
         self.producer = producer.Producer(self.rabbit_mq_path, self.current_queue_name)
         self.manager = manager.Manager()
         self.receiver = receiver.Receiver(
-            self.rabbit_mq_path, 
-            self.current_queue_name, 
-            self.storage, 
-            self.producer, 
+            self.rabbit_mq_path,
+            self.current_queue_name,
+            self.storage,
+            self.producer,
             self.manager
             )
-
-
-    def init_app(self, app):
+            
         setattr(app, 'message_broker', self)
         t = Thread(target= self.receiver.run)
         t.setDaemon(True)
@@ -42,4 +44,3 @@ class MessageBroker:
                     message= "Timeout error",
                     code= 504
                 ).data
-

@@ -36,17 +36,17 @@ class Receiver:
                             logging.info("MESSAGE : %s" % str(message_json))
 
                             if message_json['forward']:
-                                logging.info("SEND FORWARD TO %s" % message_json['from'])
-                                answer = self.manager.run_function(message_json['question'])
+                                logging.info("SEND FORWARD~ TO %s" % message_json['from'])
+                                answer = self.manager.run_function(**message_json['question'])
                                 data = {
                                     'answer' : answer,
                                     'question' : message_json['question']
                                 }
                                 self.producer.send_message(
-                                    uuid= message_json['uuid'], 
-                                    consumer_name= message_json['from'], 
+                                    uuid= message_json['uuid'],
+                                    consumer_name= message_json['from'],
                                     forward= False,
-                                    question= message_json['question'], 
+                                    question= message_json['question'],
                                     answer= answer)
                             else:
                                 logging.info("SAVE TO STORAGE - <%s>" % message_json['uuid'])
