@@ -36,7 +36,7 @@ cssselect2==0.2.1
 defusedxml==0.5.0
 html5lib==1.0.1
 pdfrw==0.4
-Pillow==5.2.0
+Pillow==9.0.1
 Pyphen==0.9.4
 tinycss2==0.6.1
 WeasyPrint==0.42.3
